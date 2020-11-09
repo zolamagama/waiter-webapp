@@ -1,0 +1,14 @@
+.container {
+	width: 90%;
+	margin:	auto;
+	text-align: center;
+	
+}
+
+.messages {
+	color: crimson;
+}
+
+.confirm {
+  color: green;
+}
