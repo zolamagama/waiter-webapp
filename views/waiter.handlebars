@@ -1,11 +1,35 @@
 <div class="container">
 
-<h1>Select your working days</h1>
-<hr>
+    <h1>Select your working days</h1>
+    <hr>
 
-<input type="checkbox" name="days" id="monday">
+    <h6 class="messages">{{messages.error}}</h6>
+    <h6 class="confirm">{{messages.success}}</h6>
 
+    <form action="/" method="POST">
+        <input type="text" name="username" placeholder="Enter your name">
 
+        <button class="button-primary" type="submit">Add</button>
+    </form>
+    <br>
+    {{!-- <label>
+        <input type="checkbox" checked="checked" />
+        <span>Yellow</span>
+      </label> --}}
+    <input type="checkbox" name="weekdays" id="day1" value="Monday">Monday
+    <input type="checkbox" name="weekdays" id="day2" value="Tuesday">Tuesday
+    <input type="checkbox" name="weekdays" id="day3" value="Wednesday">Wednesday
+    <input type="checkbox" name="weekdays" id="day4" value="Thursday">Thursday
+    <input type="checkbox" name="weekdays" id="day5" value="Friday">Friday
+    <input type="checkbox" name="weekdays" id="day6" value="Saturday">Saturday
+    <input type="checkbox" name="weekdays" id="day7" value="Sunday">Sunday
 
 
 </div>
+
+<script>
+    setTimeout(function () {
+        document.querySelector(".messages").innerHTML = "";
+        document.querySelector(".confirm").innerHTML = ""
+    }, 2000);
+</script>

@@ -46,28 +46,45 @@ const pool = new Pool({
 
 const waiter = waiter_availability(pool)
 
-app.get('', async function(req, res) {
+app.get('', async function (req, res) {
 
 
     res.render('index')
 
 });
 
-app.get('/waiter/:username', async function(req, res){
+app.get('/waiter/:username', async function (req, res, next) {
 
 
-    res.render('index')
-
-});
-
-app.post('/waiter/:username', async function(req, res){
-
-
-    res.render('index')
+    res.render('waiter')
 
 });
 
-app.get('/days', async function(req, res){
+app.post('/waiter/:username', async function (req, res, next) {
+
+    try {
+
+        const username = _.capitalize(req.body.username)
+
+        if (username !== '') {
+            await waiter.addWaiter(username)
+            req.flash('success', 'You have successfully registered your name')
+
+        } else {
+            req.flash('error', 'Please enter your name')
+        }
+
+    } catch (err) {
+        next(err)
+    }
+
+
+
+    res.render('waiter')
+
+});
+
+app.get('/days', async function (req, res, next) {
 
 
     res.render('index')

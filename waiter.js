@@ -3,18 +3,8 @@ module.exports = function (pool) {
 
     async function addWaiter(waiter) {
 
-        const weekdays = await pool.query('select id from weekdays where Days = $1', [waiter])
-        const id = weekdays.rows[0].id
-        let confirmed;
-
-        if (confirmed.rowCount < 0) {
-
-            await pool.query('insert into waiter (waiter_name, days_selected) values ($1, $2)', [waiter, id])
-        }
-        else {
-            return false
-        }
-
+        const insertName = await pool.query('insert into waiters (waiters_name) values ($1)', [waiter])
+        return insertName.rows;
     }
 
     async function getWaiter() {
