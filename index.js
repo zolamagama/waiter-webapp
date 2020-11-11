@@ -26,7 +26,7 @@ app.set('view engine', 'handlebars');
 
 app.use(express.static('public'));
 
-const connectionString = process.env.DATABASE_URL || 'postgresql://codex:pg123@localhost:5432/reg_numbers';
+const connectionString = process.env.DATABASE_URL || 'postgresql://codex:pg123@localhost:5432/waiter-availability';
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -46,48 +46,56 @@ const pool = new Pool({
 
 const waiter = waiter_availability(pool)
 
-app.get('', async function (req, res) {
-
+app.get('/', async function (req, res) {
 
     res.render('index')
 
 });
 
-app.get('/waiter/:username', async function (req, res, next) {
+app.get('/waiter', async function (req, res) {
 
 
     res.render('waiter')
 
 });
 
+app.get('/waiter/:username', async function (req, res, next) {
+ 
+
+        const user = req.params.user
+      
+
+        res.render('waiter', {
+            user
+        });
+
+    
+});
+
 app.post('/waiter/:username', async function (req, res, next) {
-
     try {
-
-        const username = _.capitalize(req.body.username)
-
-        if (username !== '') {
-            await waiter.addWaiter(username)
-            req.flash('success', 'You have successfully registered your name')
-
-        } else {
-            req.flash('error', 'Please enter your name')
-        }
-
-    } catch (err) {
-        next(err)
+    const user = req.params.user
+    if (user !== '') {
+        await waiter.addWaiter(user)
+        return 'Hello, ' + user
+    }
+    else {
+        req.flash('error', 'Please enter your name in the URL')
     }
 
+    await waiter.addWaiter(user)
 
-
-    res.render('waiter')
-
+    res.redirect('waiter')
+       }   catch (err) {
+        next(err)
+    }
+    
 });
 
 app.get('/days', async function (req, res, next) {
 
 
-    res.render('index')
+    res.render('administrator')
 
 });
 

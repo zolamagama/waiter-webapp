@@ -18,3 +18,25 @@
  text-shadow: 2px 2px red;
 
 }
+
+table, th, td {
+	border: 1px solid black;
+  }
+
+  table {
+	width: 100%;
+  }
+
+.red {
+color: crimson;
+}
+
+.green {
+
+	color: rgb(28, 139, 0);
+
+}
+.orange {
+
+	color: darkorange;
+}
