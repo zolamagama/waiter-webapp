@@ -40,3 +40,15 @@ color: crimson;
 
 	color: darkorange;
 }
+
+.enough {
+	color: green;
+}
+
+.needed {
+	color: darkorange;
+}
+
+.over-subscribed {	
+	color: crimson;
+}

@@ -1,7 +1,7 @@
 create table weekdays (
 
 	id serial not null primary key,
-	Days text not null
+	days text not null
 
 );
 
@@ -24,18 +24,11 @@ foreign key (weekdays_id) references weekdays(id)
 
 
 
-insert into waiters (waiter_name) values ('Nwabisa');
-insert into waiters (waiter_name) values ('Zola');
-insert into waiters (waiter_name) values ('Lulama');
-
-
-
-
-insert into weekdays (Days) values ('Monday');
-insert into weekdays (Days) values ('Tuesday');
-insert into weekdays (Days) values ('Wednesday');
-insert into weekdays (Days) values ('Thursday');
-insert into weekdays (Days) values ('Friday');
-insert into weekdays (Days) values ('Saturday');
-insert into weekdays (Days) values ('Sunday');
+insert into weekdays (days) values ('Monday');
+insert into weekdays (days) values ('Tuesday');
+insert into weekdays (days) values ('Wednesday');
+insert into weekdays (days) values ('Thursday');
+insert into weekdays (days) values ('Friday');
+insert into weekdays (days) values ('Saturday');
+insert into weekdays (days) values ('Sunday');
 

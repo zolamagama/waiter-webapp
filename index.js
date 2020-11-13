@@ -59,43 +59,48 @@ app.get('/waiter', async function (req, res) {
 
 });
 
-app.get('/waiter/:username', async function (req, res, next) {
+app.get('/waiter/:username', async function (req, res) {
  
-
-        const user = req.params.user
-      
+    const user = req.params.username
+    // const day = req.body.check
+    // var both = await waiter.addWaiter(user,day)
 
         res.render('waiter', {
-            user
+            username: user
         });
 
     
 });
 
-app.post('/waiter/:username', async function (req, res, next) {
-    try {
-    const user = req.params.user
-    if (user !== '') {
-        await waiter.addWaiter(user)
-        return 'Hello, ' + user
-    }
-    else {
-        req.flash('error', 'Please enter your name in the URL')
-    }
+app.post('/waiter/:username', async function (req, res) {
+    const user = req.params.username
+    const days = req.body.weekdays
+   var using = await waiter.addWaiter(user)
+  var select = await waiter.selectDays(user,days)
 
-    await waiter.addWaiter(user)
-
-    res.redirect('waiter')
-       }   catch (err) {
-        next(err)
-    }
+    // const days = await waiter.getDays()
     
+
+    res.render('waiter', {
+        using, select
+    })
+
+  
 });
 
 app.get('/days', async function (req, res, next) {
 
+    const weekdays = await waiter.getDays()
+    const waiters = await waiter.getWaiter()
 
-    res.render('administrator')
+    var workingDays = await waiter.getEstratweniId()
+    console.log(workingDays);
+
+    res.render('administrator', {
+        workingDays,
+        weekdays,
+        waiters
+    })
 
 });
 

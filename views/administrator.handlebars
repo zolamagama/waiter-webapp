@@ -10,30 +10,24 @@
 
     <form action="/days" method="GET">
 
-    <table>
-        <tr>
-            <th>Monday</th>
-            <th>Tuesday</th>
-            <th>Wednesday</th>
-            <th>Thursday</th>
-            <th>Friday</th>
-            <th>Saturday</th>
-            <th>Sunday</th>
+        <table>
+            {{#each workingDays}}
+            <tr>
+                <th class="">
+                    {{this.days}}
+                </th>
+                {{!-- {{/each}} --}}
+            </tr>
 
-        </tr>
-
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-
-    </table>
-</form>
+            <tr>
+                {{!-- {{#each waiters}} --}}
+                <td>
+                    {{this.waiter_name}}
+                </td>
+            </tr>
+            {{/each}}
+        </table>
+    </form>
     <button class="button-primary" type="submit">Reset</button>
 
 
