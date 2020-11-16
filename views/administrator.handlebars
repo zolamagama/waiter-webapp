@@ -2,33 +2,47 @@
 
     <h2>Working days of waiters</h2>
 
-    <h5 class="green">Enough</h5>
-    <h5 class="orange">Still needed</h5>
-    <h5 class="red">Over-subscribed</h5>
+    <h5 style="color: green;">Enough</h5>
+    <h5 style="color: orange;">Still needed</h5>
+    <h5 style="color: crimson;">Over-subscribed</h5>
 
     <hr>
 
     <form action="/days" method="GET">
-
+        {{!-- <div class="shift"> --}}
         <table>
-            {{#each workingDays}}
-            <tr>
-                <th class="">
-                    {{this.days}}
-                </th>
-                {{!-- {{/each}} --}}
-            </tr>
+            <thead>
+                <tr>
+                    {{#each insert}}
+                    <th class="{{color}}">
+                        {{day}}
+                    </th>
+                    {{/each}}
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    {{#each insert}}
+                    <td>
+                        <ul>
+                            <li class="">{{this.waiters}}</li>
+                        </ul>
+                    </td>
+                    {{/each}}
+                </tr>
 
-            <tr>
-                {{!-- {{#each waiters}} --}}
-                <td>
-                    {{this.waiter_name}}
-                </td>
-            </tr>
-            {{/each}}
+            </tbody>
         </table>
+
+        {{!-- </div> --}}
+
     </form>
     <button class="button-primary" type="submit">Reset</button>
+    <br>
+    <br>
+    <a href="/">
+        <button class="button-primary" type="submit">Home</button>
+    </a>
 
 
 </div>

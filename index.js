@@ -60,46 +60,50 @@ app.get('/waiter', async function (req, res) {
 });
 
 app.get('/waiter/:username', async function (req, res) {
- 
-    const user = req.params.username
-    // const day = req.body.check
-    // var both = await waiter.addWaiter(user,day)
 
-        res.render('waiter', {
-            username: user
-        });
+    const user = _.capitalize(req.params.username)
+    const days = req.body.weekdays
 
-    
+    res.render('waiter', {
+        username: user,
+        select: days
+    });
+
+
 });
 
 app.post('/waiter/:username', async function (req, res) {
-    const user = req.params.username
-    const days = req.body.weekdays
-   var using = await waiter.addWaiter(user)
-  var select = await waiter.selectDays(user,days)
 
-    // const days = await waiter.getDays()
-    
+    const user = _.capitalize(req.params.username)
+    const days = req.body.weekdays
+   
+    var using = await waiter.addWaiter(user)
+    var select = await waiter.selectDays(user, days)
+
 
     res.render('waiter', {
         using, select
     })
 
-  
+
 });
 
 app.get('/days', async function (req, res, next) {
 
     const weekdays = await waiter.getDays()
     const waiters = await waiter.getWaiter()
-
-    var workingDays = await waiter.getEstratweniId()
+    const insert = await waiter.getEachWaiter()
+    var workingDays = await waiter.displayData()
+    // console.log(insert + " data");
     console.log(workingDays);
 
     res.render('administrator', {
+        
+        insert,
         workingDays,
         weekdays,
         waiters
+
     })
 
 });
