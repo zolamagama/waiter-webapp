@@ -108,7 +108,7 @@ if (shifts.length > 0) {
             if (wave.waiters.length === 3) {
                 wave.color = 'green'
             }
-            if (wave.waiters.length < 3) {
+            if (wave.waiters.length === 2) {
                 wave.color = 'orange'
             }
             if (wave.waiters.length > 3) {
@@ -136,7 +136,7 @@ return insert
 
     async function reset() {
 
-        const clear = await pool.query('delete from waiters');
+        const clear = await pool.query('delete from estratweni');
         return clear.rows;
     }
 

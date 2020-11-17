@@ -73,19 +73,51 @@ app.get('/waiter/:username', async function (req, res) {
 });
 
 app.post('/waiter/:username', async function (req, res) {
-
     const user = _.capitalize(req.params.username)
     const days = req.body.weekdays
-   
-    var using = await waiter.addWaiter(user)
-    var select = await waiter.selectDays(user, days)
+
+    try {
+
+        if (days !== 0) {
+            if (user !== '') {
+                req.flash('success', `${user} have successfully submitted your working days`)
+                var select = await waiter.selectDays(user, days)
+            } 
+            else {
+                req.flash('error', 'First enter your username')
+            }
+
+        }
+        else {
+            req.flash('error', 'Please select your working days')
+
+        }
 
 
-    res.render('waiter', {
-        using, select
-    })
+        var using = await waiter.addWaiter(user)
 
 
+        res.render('waiter', {
+            using, select
+        })
+    } catch (error) {
+
+    }
+
+});
+
+app.get('/clear', async function (req, res) {
+    try {
+        req.flash('success', 'You have successfully cleared the data')
+        await waiter.reset()
+
+
+        res.render('administrator', {
+
+        })
+    } catch (error) {
+
+    }
 });
 
 app.get('/days', async function (req, res, next) {
@@ -98,7 +130,7 @@ app.get('/days', async function (req, res, next) {
     console.log(workingDays);
 
     res.render('administrator', {
-        
+
         insert,
         workingDays,
         weekdays,

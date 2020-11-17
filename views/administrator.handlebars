@@ -33,11 +33,16 @@
 
             </tbody>
         </table>
+        <h6 class="messages">{{messages.error}}</h6>
+        <h6 class="confirm">{{messages.success}}</h6>
 
         {{!-- </div> --}}
 
     </form>
-    <button class="button-primary" type="submit">Reset</button>
+    <form action="/clear" method="get">
+        <button class="button-primary" type="submit">Reset</button>
+
+    </form>
     <br>
     <br>
     <a href="/">
@@ -46,3 +51,10 @@
 
 
 </div>
+
+<script>
+    setTimeout(function () {
+        document.querySelector(".messages").innerHTML = "";
+        document.querySelector(".confirm").innerHTML = ""
+    }, 2000);
+</script>
