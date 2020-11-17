@@ -72,7 +72,7 @@ app.get('/waiter/:username', async function (req, res) {
 
 });
 
-app.post('/waiter/:username', async function (req, res) {
+app.post('/waiter/:username', async function (req, res, next) {
     const user = _.capitalize(req.params.username)
     const days = req.body.weekdays
 
@@ -101,12 +101,12 @@ app.post('/waiter/:username', async function (req, res) {
             using, select
         })
     } catch (error) {
-
+        next(error)
     }
 
 });
 
-app.get('/clear', async function (req, res) {
+app.get('/clear', async function (req, res, next) {
     try {
         req.flash('success', 'You have successfully cleared the data')
         await waiter.reset()
@@ -116,18 +116,17 @@ app.get('/clear', async function (req, res) {
 
         })
     } catch (error) {
-
+        next(error)
     }
 });
 
-app.get('/days', async function (req, res, next) {
+app.get('/days', async function (req, res) {
 
     const weekdays = await waiter.getDays()
     const waiters = await waiter.getWaiter()
     const insert = await waiter.getEachWaiter()
     var workingDays = await waiter.displayData()
-    // console.log(insert + " data");
-  //  console.log(workingDays);
+
 
     res.render('administrator', {
 
