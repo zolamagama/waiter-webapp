@@ -127,7 +127,7 @@ app.get('/days', async function (req, res, next) {
     const insert = await waiter.getEachWaiter()
     var workingDays = await waiter.displayData()
     // console.log(insert + " data");
-    console.log(workingDays);
+  //  console.log(workingDays);
 
     res.render('administrator', {
 

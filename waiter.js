@@ -31,7 +31,7 @@ module.exports = function (pool) {
             }
 
         } catch (error) {
-            console.log(error);
+      //      console.log(error);
         }
 
     }
@@ -53,7 +53,7 @@ module.exports = function (pool) {
             const dayName = days[i];
             var shift_id = await shiftsID(dayName)
 
-            console.log(dayName, shift_id)
+     //       console.log(dayName, shift_id)
             await pool.query('insert into estratweni (waiters_id, weekdays_id) values ($1, $2)', [id, shift_id]);
         }
 
@@ -145,7 +145,7 @@ const displayData = async () => {
     let d = [];
     let admin = await getEachWaiter();
     admin.forEach(element => {
-        console.log(element.waiters + " Zola");
+    //    console.log(element.waiters + " Zola");
         d.push(element.waiters);
     });
     // console.log(admin);
