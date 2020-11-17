@@ -72,37 +72,27 @@ app.get('/waiter/:username', async function (req, res) {
 
 });
 
-app.post('/waiter/:username', async function (req, res, next) {
+app.post('/waiter/:username', async function (req, res) {
     const user = _.capitalize(req.params.username)
     const days = req.body.weekdays
 
-    try {
+    try {    
+    req.flash('success', `${user} have successfully submitted your working days`)
+    var select = await waiter.selectDays(user, days)
 
-        if (days !== 0) {
-            if (user !== '') {
-                req.flash('success', `${user} have successfully submitted your working days`)
-                var select = await waiter.selectDays(user, days)
-            } 
-            else {
-                req.flash('error', 'First enter your username')
-            }
-
-        }
-        else {
-            req.flash('error', 'Please select your working days')
-
-        }
+    var using = await waiter.addWaiter(user)
 
 
-        var using = await waiter.addWaiter(user)
+    res.render('waiter', {
+        using, select
+    })
 
-
-        res.render('waiter', {
-            using, select
-        })
-    } catch (error) {
-        next(error)
     }
+    catch (error) {
+
+    }
+
+
 
 });
 

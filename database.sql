@@ -1,3 +1,7 @@
+
+drop table if exists estratweni,waiters,weekdays;
+
+
 create table weekdays (
 
 	id serial not null primary key,
