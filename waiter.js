@@ -15,24 +15,29 @@ module.exports = function (pool) {
 
     }
 
-    async function getWaiterForEachDay (waiter) {
+    async function getWaiterForEachDay(waiter) {
         const each = await pool.query('select * from estratweni where waiters_id = $1', [waiter]);
         return each.rows
     }
 
     async function shiftsID(days) {
-        try {
-            if (days) {
-                const day_id = await pool.query('select id from weekdays where days = $1', [days])
-                return day_id.rows[0].id
+        if (days) {
+            const day_id = await pool.query('select id from weekdays where days = $1', [days])
+            console.log(days);
+            return day_id.rows[0].id
 
-            } else {
-                return false
-            }
-
-        } catch (error) {
-      //      console.log(error);
+        } else {
+            return false
         }
+
+
+    }
+
+    async function waiterID(waiter) {
+            const waiters_id = await pool.query('select id from waiters where waiter_name = $1', [waiter])
+      //      console.log(waiter)
+            return waiters_id.rows[0].id
+
 
     }
 
@@ -45,23 +50,21 @@ module.exports = function (pool) {
 
 
 
-    async function selectDays(waiterID, days) {
+    async function selectDays(waiter, days) {
 
-        const waiter_id = await pool.query('select id from waiters where waiter_name = $1', [waiterID])
-        const id = waiter_id.rows[0].id;
         for (let i = 0; i < days.length; i++) {
-            const dayName = days[i];
-            var shift_id = await shiftsID(dayName)
 
-     //       console.log(dayName, shift_id)
-            await pool.query('insert into estratweni (waiters_id, weekdays_id) values ($1, $2)', [id, shift_id]);
+            const waiter_id = await waiterID(waiter)
+            const weekdays_id = await shiftsID(days[i])
+
+            await pool.query('insert into estratweni (waiters_id, weekdays_id) values ($1, $2)', [waiter_id, weekdays_id]);
         }
 
     }
 
     async function getEachWaiter() {
 
-        let shifts = await getEstratweniId();   
+        let shifts = await getEstratweniId();
         var insert = [{
             id: 0,
             day: 'Monday',
@@ -97,29 +100,29 @@ module.exports = function (pool) {
             day: 'Sunday',
             waiters: [],
             color: '',
-        }  
-    ]
-if (shifts.length > 0) {
-    for (let i = 0; i < shifts.length; i++) {
-        insert.forEach(wave => {
-            if (wave.day === shifts[i].days) {
-                wave.waiters.push(shifts[i].waiter_name);
+        }
+        ]
+        if (shifts.length > 0) {
+            for (let i = 0; i < shifts.length; i++) {
+                insert.forEach(wave => {
+                    if (wave.day === shifts[i].days) {
+                        wave.waiters.push(shifts[i].waiter_name);
+                    }
+                    if (wave.waiters.length === 3) {
+                        wave.color = 'green'
+                    }
+                    if (wave.waiters.length === 2) {
+                        wave.color = 'orange'
+                    }
+                    if (wave.waiters.length > 3) {
+                        wave.color = 'red'
+                    }
+                })
             }
-            if (wave.waiters.length === 3) {
-                wave.color = 'green'
-            }
-            if (wave.waiters.length === 2) {
-                wave.color = 'orange'
-            }
-            if (wave.waiters.length > 3) {
-                wave.color = 'red'
-            }
-        })
-    }
-}
+        }
 
-return insert
-       
+        return insert
+
     }
 
     async function getDays() {
@@ -141,21 +144,21 @@ return insert
     }
 
 
-const displayData = async () => {
-    let d = [];
-    let admin = await getEachWaiter();
-    admin.forEach(element => {
-    //    console.log(element.waiters + " Zola");
-        d.push(element.waiters);
-    });
-    // console.log(admin);
-    // for (const days of admin) {
-    //     console.log(days.waiters);
-    //    return days.waiters;
-    // }
-    
-    return d
-}
+    const displayData = async () => {
+        let d = [];
+        let admin = await getEachWaiter();
+        admin.forEach(element => {
+            //    console.log(element.waiters + " Zola");
+            d.push(element.waiters);
+        });
+        // console.log(admin);
+        // for (const days of admin) {
+        //     console.log(days.waiters);
+        //    return days.waiters;
+        // }
+
+        return d
+    }
 
     return {
         addWaiter,
@@ -167,7 +170,9 @@ const displayData = async () => {
         getEstratweniId,
         getEachWaiter,
         getWaiterForEachDay,
-        displayData
+        displayData,
+        waiterID,
+        shiftsID
 
     }
 

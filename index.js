@@ -52,7 +52,7 @@ app.get('/', async function (req, res) {
 
 });
 
-app.get('/waiter', async function (req, res) {
+app.get('/waiter/', async function (req, res) {
 
 
     res.render('waiter')
@@ -63,6 +63,9 @@ app.get('/waiter/:username', async function (req, res) {
 
     const user = _.capitalize(req.params.username)
     const days = req.body.weekdays
+
+
+    await waiter.addWaiter(user)
 
     res.render('waiter', {
         username: user,
@@ -75,55 +78,54 @@ app.get('/waiter/:username', async function (req, res) {
 app.post('/waiter/:username', async function (req, res) {
     const user = _.capitalize(req.params.username)
     const days = req.body.weekdays
-
-    try {    
-    req.flash('success', `${user} have successfully submitted your working days`)
-    var select = await waiter.selectDays(user, days)
-
-    var using = await waiter.addWaiter(user)
-
-
-    res.render('waiter', {
-        using, select
-    })
-
-    }
-    catch (error) {
-
-    }
-
-
-
-});
-
-app.get('/clear', async function (req, res, next) {
     try {
-        req.flash('success', 'You have successfully cleared the data')
-        await waiter.reset()
+        if (days !== '') {
+            req.flash('success', `${user}, you have successfully submitted shift days`)
+
+        } else {
+            req.flash('error', 'Please select your shift days')
+        }
+
+        var select = await waiter.selectDays(user, days)
+      //  console.log(select);
 
 
-        res.render('administrator', {
-
+        res.render('waiter', {
+            select
         })
+
     } catch (error) {
-        next(error)
+
     }
+
 });
 
-app.get('/days', async function (req, res) {
+app.get('/clear', async function (req, res) {
 
-    const weekdays = await waiter.getDays()
-    const waiters = await waiter.getWaiter()
-    const insert = await waiter.getEachWaiter()
-    var workingDays = await waiter.displayData()
+    req.flash('success', 'You have successfully cleared the data')
+    await waiter.reset()
 
 
     res.render('administrator', {
 
-        insert,
-        workingDays,
-        weekdays,
-        waiters
+    })
+
+});
+
+app.get('/days', async function (req, res) {
+
+    // const weekdays = await waiter.getDays()
+    // const waiters = await waiter.getWaiter()
+    const insert = await waiter.getEachWaiter()
+    //  var workingDays = await waiter.displayData()
+
+
+    res.render('administrator', {
+
+        insert
+        // workingDays,
+        // weekdays,
+        // waiters
 
     })
 
@@ -148,7 +150,7 @@ app.get('/days', async function (req, res) {
 
 
 
-const PORT = process.env.PORT || 4545;
+const PORT = process.env.PORT || 5454;
 
 app.listen(PORT, function () {
 
