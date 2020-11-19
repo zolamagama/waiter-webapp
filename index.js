@@ -63,6 +63,8 @@ app.get('/waiter/:username', async function (req, res) {
 
     const user = _.capitalize(req.params.username)
     const days = req.body.weekdays
+//    const checkedShifts = await waiter.getDaysOfWaiter()
+
 
 
     await waiter.addWaiter(user)
@@ -70,6 +72,8 @@ app.get('/waiter/:username', async function (req, res) {
     res.render('waiter', {
         username: user,
         select: days
+    //    checkedShifts
+
     });
 
 
@@ -87,7 +91,7 @@ app.post('/waiter/:username', async function (req, res) {
         }
 
         var select = await waiter.selectDays(user, days)
-      //  console.log(select);
+        //  console.log(select);
 
 
         res.render('waiter', {
@@ -114,15 +118,13 @@ app.get('/clear', async function (req, res) {
 
 app.get('/days', async function (req, res) {
 
-    // const weekdays = await waiter.getDays()
-    // const waiters = await waiter.getWaiter()
     const insert = await waiter.getEachWaiter()
-    //  var workingDays = await waiter.displayData()
-
+  //  console.log(insert);
 
     res.render('administrator', {
 
-        insert
+        insert,
+
         // workingDays,
         // weekdays,
         // waiters

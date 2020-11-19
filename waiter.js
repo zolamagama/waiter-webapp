@@ -48,6 +48,13 @@ module.exports = function (pool) {
 
     }
 
+    async function getDaysOfWaiter (waiter) {
+        const checkDays = await pool.query('select weekdays_id from estratweni where waiters_id = 2', [waiter]);
+        console.log(waiter);
+        return checkDays.rows;
+
+    }
+    
 
 
     async function selectDays(waiter, days) {
@@ -105,9 +112,11 @@ module.exports = function (pool) {
         if (shifts.length > 0) {
             for (let i = 0; i < shifts.length; i++) {
                 insert.forEach(wave => {
+                    
                     if (wave.day === shifts[i].days) {
                         wave.waiters.push(shifts[i].waiter_name);
                     }
+                    
                     if (wave.waiters.length === 3) {
                         wave.color = 'green'
                     }
@@ -162,6 +171,7 @@ module.exports = function (pool) {
 
     return {
         addWaiter,
+        getDaysOfWaiter,
         getWaiter,
         updateDays,
         selectDays,

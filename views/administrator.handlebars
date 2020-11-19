@@ -1,9 +1,14 @@
 <div class="container">
 
-        <title>Waiters App</title>
+    <title>Waiters App</title>
 
 
-    <h2>Working days of waiters</h2>
+    <h2>Working days of waiters</h2> <a href="/">
+        <button class="button-primary" type="submit">Home</button>
+    </a>
+    <form action="/clear" method="get"> <button class="button-primary" type="submit">Reset</button> </form>
+
+
 
     <h5 style="color: green;">Enough</h5>
     <h5 style="color: orange;">Still needed</h5>
@@ -14,27 +19,27 @@
     <form action="/days" method="GET">
         {{!-- <div class="shift"> --}}
         <table>
-            <thead>
-                <tr>
-                    {{#each insert}}
-                    <th class="{{color}}">
-                        {{day}}
-                    </th>
-                    {{/each}}
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    {{#each insert}}
-                    <td>
-                        <ul>
-                            <li class="">{{waiters}}</li>
-                        </ul>
-                    </td>
-                    {{/each}}
-                </tr>
+            <tr>
+                {{#each insert}}
+                <th class="{{color}}">
+                    {{day}}
+                </th>
+                {{/each}}
+            </tr>
 
-            </tbody>
+            <tr>
+                {{#each insert}}
+                <td>
+                    <ul>
+                        {{#each waiters}}
+                    <a href="/waiter/{{this}}"><li>{{this}}</li></a>
+                        {{/each}}
+                    </ul>
+
+                </td>
+                {{/each}}
+            </tr>
+
         </table>
         <h6 class="messages">{{messages.error}}</h6>
         <h6 class="confirm">{{messages.success}}</h6>
@@ -42,15 +47,7 @@
         {{!-- </div> --}}
 
     </form>
-    <form action="/clear" method="get">
-        <button class="button-primary" type="submit">Reset</button>
 
-    </form>
-    <br>
-    <br>
-    <a href="/">
-        <button class="button-primary" type="submit">Home</button>
-    </a>
 
 
 </div>
