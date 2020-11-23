@@ -15,15 +15,15 @@ module.exports = function (pool) {
 
     }
 
-    async function getWaiterForEachDay(waiter) {
-        const each = await pool.query('select * from estratweni where waiters_id = $1', [waiter]);
-        return each.rows
-    }
+    // async function getWaiterForEachDay(waiter) {
+    //     const each = await pool.query('select * from estratweni where waiters_id = $1', [waiter]);
+    //     return each.rows
+    // }
 
     async function shiftsID(days) {
         if (days) {
             const day_id = await pool.query('select id from weekdays where days = $1', [days])
-            console.log(days);
+            //    console.log(days);
             return day_id.rows[0].id
 
         } else {
@@ -34,9 +34,9 @@ module.exports = function (pool) {
     }
 
     async function waiterID(waiter) {
-            const waiters_id = await pool.query('select id from waiters where waiter_name = $1', [waiter])
-      //      console.log(waiter)
-            return waiters_id.rows[0].id
+        const waiters_id = await pool.query('select id from waiters where waiter_name = $1', [waiter])
+    //     console.log(waiter)
+        return waiters_id.rows[0].id
 
 
     }
@@ -48,17 +48,45 @@ module.exports = function (pool) {
 
     }
 
-    async function getDaysOfWaiter (waiter) {
-        const checkDays = await pool.query('select weekdays_id from estratweni where waiters_id = 2', [waiter]);
-        console.log(waiter);
-        return checkDays.rows;
-
+    async function getDaysId() {
+        const day_id = await pool.query('select days from estratweni join waiters on estratweni.waiters_id = waiters.id join weekdays on estratweni.weekdays_id = weekdays.id');
+        return day_id.rows
     }
-    
+
+    async function getDaysOfWaiter(waiter) {
+        const twentyFourHours = await pool.query('select days from weekdays');
+     //   console.log(waiter);
+        const checkDays = await waiterID(waiter);
+        const daysFromEstratweni = await getDaysId(checkDays);
+        const weekdays = twentyFourHours.rows;
+
+        // await weekdays.forEach(async (days) => {
+        //     days.checked = '';
+        //     days.selected = [];
+        // //    console.log(days);
+            
+        //     daysFromEstratweni.forEach(async (waiter) => {
+        //      //   console.log(waiter);
+        //         if (days.day === waiter.days) {
+        //             days.checked = 'checked'
+        //         }
+
+
+        //     })
+
+
+        //     // if ( === ) {
+
+        //     // }
+        // })
+
+   }
+
 
 
     async function selectDays(waiter, days) {
 
+        //   await pool.query('delete from estratweni where waiters_id = $1', [waiter])
         for (let i = 0; i < days.length; i++) {
 
             const waiter_id = await waiterID(waiter)
@@ -112,11 +140,11 @@ module.exports = function (pool) {
         if (shifts.length > 0) {
             for (let i = 0; i < shifts.length; i++) {
                 insert.forEach(wave => {
-                    
+
                     if (wave.day === shifts[i].days) {
                         wave.waiters.push(shifts[i].waiter_name);
                     }
-                    
+
                     if (wave.waiters.length === 3) {
                         wave.color = 'green'
                     }
@@ -134,17 +162,17 @@ module.exports = function (pool) {
 
     }
 
-    async function getDays() {
-        const confirmedShifts = await pool.query('select days from weekdays');
-        return confirmedShifts.rows;
-    }
+    // async function getDays() {
+    //     const confirmedShifts = await pool.query('select days from weekdays');
+    //     return confirmedShifts.rows;
+    // }
 
-    async function updateDays(waiter) {
+    // async function updateDays(waiter) {
 
-        const update = await pool.query('update weekdays set days = days+1', [waiter]);
-        return update.rowCount;
+    //     const update = await pool.query('update weekdays set days = days+1', [waiter]);
+    //     return update.rowCount;
 
-    }
+    // }
 
     async function reset() {
 
@@ -153,34 +181,35 @@ module.exports = function (pool) {
     }
 
 
-    const displayData = async () => {
-        let d = [];
-        let admin = await getEachWaiter();
-        admin.forEach(element => {
-            //    console.log(element.waiters + " Zola");
-            d.push(element.waiters);
-        });
-        // console.log(admin);
-        // for (const days of admin) {
-        //     console.log(days.waiters);
-        //    return days.waiters;
-        // }
+    // const displayData = async () => {
+    //     let d = [];
+    //     let admin = await getEachWaiter();
+    //     admin.forEach(element => {
+    //         //    console.log(element.waiters + " Zola");
+    //         d.push(element.waiters);
+    //     });
+    //     // console.log(admin);
+    //     // for (const days of admin) {
+    //     //     console.log(days.waiters);
+    //     //    return days.waiters;
+    //     // }
 
-        return d
-    }
+    //     return d
+    // }
 
     return {
         addWaiter,
+        getDaysId,
         getDaysOfWaiter,
         getWaiter,
-        updateDays,
+        //    updateDays,
         selectDays,
-        getDays,
+        //    getDays,
         reset,
         getEstratweniId,
         getEachWaiter,
-        getWaiterForEachDay,
-        displayData,
+        //    getWaiterForEachDay,
+        //    displayData,
         waiterID,
         shiftsID
 

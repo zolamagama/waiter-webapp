@@ -63,7 +63,10 @@ app.get('/waiter/:username', async function (req, res) {
 
     const user = _.capitalize(req.params.username)
     const days = req.body.weekdays
-//    const checkedShifts = await waiter.getDaysOfWaiter()
+  //  const getCheckedDays = await waiter.getDaysOfWaiter()
+ // const checkedShifts = await waiter.getDaysOfWaiter(user)
+
+//  console.log(checkedShifts);
 
 
 
@@ -71,8 +74,8 @@ app.get('/waiter/:username', async function (req, res) {
 
     res.render('waiter', {
         username: user,
-        select: days
-    //    checkedShifts
+        select: days,
+    //   checkedShifts
 
     });
 
@@ -91,7 +94,7 @@ app.post('/waiter/:username', async function (req, res) {
         }
 
         var select = await waiter.selectDays(user, days)
-        //  console.log(select);
+         console.log(select);
 
 
         res.render('waiter', {
@@ -152,7 +155,7 @@ app.get('/days', async function (req, res) {
 
 
 
-const PORT = process.env.PORT || 5454;
+const PORT = process.env.PORT || 7676
 
 app.listen(PORT, function () {
 
