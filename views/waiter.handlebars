@@ -1,5 +1,5 @@
 <div class="container">
-        <title>Waiters App</title>
+    <title>Waiters App</title>
 
 
     <h1>Select your working days</h1>
@@ -12,14 +12,12 @@
     <form action="/waiter/{{username}}" method="POST">
 
         <br>
+        {{#each weekdays}}
+        <input type="checkbox" name="weekdays" class="check" value="{{this.days}}" {{this.state}} >
+        <span class="check">{{this.days}}</span>
 
-        <input type="checkbox" name="weekdays" id="day1" class="check" value="Monday">Monday
-        <input type="checkbox" name="weekdays" id="day2" class="check" value="Tuesday">Tuesday
-        <input type="checkbox" name="weekdays" id="day3" class="check" value="Wednesday">Wednesday
-        <input type="checkbox" name="weekdays" id="day4" class="check" value="Thursday">Thursday
-        <input type="checkbox" name="weekdays" id="day5" class="check" value="Friday">Friday
-        <input type="checkbox" name="weekdays" id="day6" class="check" value="Saturday">Saturday
-        <input type="checkbox" name="weekdays" id="day7" class="check" value="Sunday">Sunday
+        {{/each}}
+
         <br>
         <button class="button-primary" type="submit" name="user">Confirm</button>
 

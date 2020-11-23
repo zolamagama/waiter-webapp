@@ -3,28 +3,30 @@ const assert = require('assert');
 const waiter_availability = require('../waiter');
 
 const pg = require("pg");
+// const { it } = require('mocha');
 
 const Pool = pg.Pool;
+
+
 
 const connectionString = process.env.DATABASE_URL || 'postgresql://codex:pg123@localhost:5432/waiter-availability';
 
 const pool = new Pool({
     connectionString
 });
+let waiters = waiter_availability(pool);
 
 describe('The waiter_availability web app', function () {
 
     beforeEach(async function () {
+        await pool.query("delete from estratweni;");
         await pool.query("delete from waiters;");
         // await pool.query("delete from weekdays;");
-        await pool.query("delete from estratweni;");
 
     });
 
 
     it('should be able to insert waiters names in the db', async function () {
-
-        let waiters = waiter_availability(pool);
 
         await waiters.addWaiter('Nwabisa');
 
@@ -40,7 +42,6 @@ describe('The waiter_availability web app', function () {
 
 
     it('should add more than one waiters name in the db', async function () {
-        let waiters = waiter_availability(pool);
 
         await waiters.addWaiter('Nwabisa'),
             await waiters.addWaiter('Zola'),
@@ -72,17 +73,7 @@ describe('The waiter_availability web app', function () {
     });
 
 
-    // it('should be able to delete all registration numbers in the db', async function () {
-    //     let waiters = waiter_availability(pool);
-
-    //     await waiters.addWaiter('Zola')
-
-    //     assert.deepEqual([], await waiters.reset())
-
-    // });
-
     it('should be able to select the days', async function () {
-        let waiters = waiter_availability(pool)
 
         await waiters.selectDays('Monday')
         await waiters.selectDays('Tuesday')
@@ -116,10 +107,31 @@ describe('The waiter_availability web app', function () {
             }
 
         ],
-            await waiters.getDays())
+            await waiters.getEachDay())
 
 
     });
+
+
+    it('should be able to add the approiate color for each day', async function () {
+
+
+        await waiters.selectDays('Monday', ['Zola']);
+        await waiters.selectDays('Monday', ['Nwabisa']);
+        await waiters.selectDays('Monday', ['Lulama'])
+
+        assert.deepEqual([
+            {
+                day: 'Monday',
+                waiters: ['Zola', 'Nwabisa', 'Lulama'],
+                color: 'green'
+            }
+        ],
+        
+        await waiters.getEachWaiter())
+
+
+    })
 
 
 

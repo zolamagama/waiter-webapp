@@ -53,9 +53,14 @@ app.get('/', async function (req, res) {
 });
 
 app.get('/waiter/', async function (req, res) {
+    const weekdays = await waiter.getDays()
 
+  
 
-    res.render('waiter')
+    res.render('waiter', {
+        weekdays
+
+    })
 
 });
 
@@ -63,19 +68,24 @@ app.get('/waiter/:username', async function (req, res) {
 
     const user = _.capitalize(req.params.username)
     const days = req.body.weekdays
-  //  const getCheckedDays = await waiter.getDaysOfWaiter()
- // const checkedShifts = await waiter.getDaysOfWaiter(user)
-
-//  console.log(checkedShifts);
-
-
-
     await waiter.addWaiter(user)
+    const weekdays = await waiter.getDays()
+    const waiter_id = await waiter.waiterID(user)
+    const getCheckedDays = await waiter.checkedShifts(waiter_id)
+
+    weekdays.forEach(day => {
+        getCheckedDays.forEach(waiter => {
+            if (waiter.weekdays_id === day.id) {
+                day.state = "checked"
+            }
+        })
+    });
 
     res.render('waiter', {
         username: user,
         select: days,
-    //   checkedShifts
+        weekdays,
+        getCheckedDays
 
     });
 
@@ -85,6 +95,11 @@ app.get('/waiter/:username', async function (req, res) {
 app.post('/waiter/:username', async function (req, res) {
     const user = _.capitalize(req.params.username)
     const days = req.body.weekdays
+    var select = await waiter.selectDays(user, days)
+    const weekdays = await waiter.getDays()
+    const waiter_id = await waiter.waiterID(user)
+    const getCheckedDays = await waiter.checkedShifts(waiter_id)
+
     try {
         if (days !== '') {
             req.flash('success', `${user}, you have successfully submitted shift days`)
@@ -93,12 +108,10 @@ app.post('/waiter/:username', async function (req, res) {
             req.flash('error', 'Please select your shift days')
         }
 
-        var select = await waiter.selectDays(user, days)
-         console.log(select);
-
-
         res.render('waiter', {
-            select
+            select,
+            weekdays,
+            getCheckedDays
         })
 
     } catch (error) {
@@ -122,15 +135,9 @@ app.get('/clear', async function (req, res) {
 app.get('/days', async function (req, res) {
 
     const insert = await waiter.getEachWaiter()
-  //  console.log(insert);
 
     res.render('administrator', {
-
-        insert,
-
-        // workingDays,
-        // weekdays,
-        // waiters
+        insert
 
     })
 
