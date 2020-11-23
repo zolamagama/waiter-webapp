@@ -114,7 +114,7 @@ module.exports = function (pool) {
         if (shifts.length > 0) {
             for (let i = 0; i < shifts.length; i++) {
                 insert.forEach(wave => {
-                    console.log(insert);
+                    // console.log(insert);
                     if (wave.day === shifts[i].days) {
                         wave.waiters.push(shifts[i].waiter_name);
                     }
@@ -122,7 +122,7 @@ module.exports = function (pool) {
                     if (wave.waiters.length === 3) {
                         wave.color = 'green'
                     }
-                    if (wave.waiters.length === 2) {
+                    if (wave.waiters.length <= 2) {
                         wave.color = 'orange'
                     }
                     if (wave.waiters.length > 3) {

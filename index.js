@@ -12,10 +12,9 @@ const pg = require("pg");
 
 const Pool = pg.Pool;
 
-const _ = require('lodash');
+const availability = require('./waiter_routes')
 
 const waiter_availability = require('./waiter')
-
 
 const app = express();
 
@@ -45,121 +44,19 @@ const pool = new Pool({
 });
 
 const waiter = waiter_availability(pool)
+const employee = availability(waiter)
 
-app.get('/', async function (req, res) {
+app.get('/', employee.index);
 
-    res.render('index')
+app.get('/waiter/', employee.enter);
 
-});
+app.get('/waiter/:username', employee.getShifts)
 
-app.get('/waiter/', async function (req, res) {
-    const weekdays = await waiter.getDays()
+app.post('/waiter/:username', employee.selectShifts)
 
-  
+app.get('/clear', employee.reset)
 
-    res.render('waiter', {
-        weekdays
-
-    })
-
-});
-
-app.get('/waiter/:username', async function (req, res) {
-
-    const user = _.capitalize(req.params.username)
-    const days = req.body.weekdays
-    await waiter.addWaiter(user)
-    const weekdays = await waiter.getDays()
-    const waiter_id = await waiter.waiterID(user)
-    const getCheckedDays = await waiter.checkedShifts(waiter_id)
-
-    weekdays.forEach(day => {
-        getCheckedDays.forEach(waiter => {
-            if (waiter.weekdays_id === day.id) {
-                day.state = "checked"
-            }
-        })
-    });
-
-    res.render('waiter', {
-        username: user,
-        select: days,
-        weekdays,
-        getCheckedDays
-
-    });
-
-
-});
-
-app.post('/waiter/:username', async function (req, res) {
-    const user = _.capitalize(req.params.username)
-    const days = req.body.weekdays
-    var select = await waiter.selectDays(user, days)
-    const weekdays = await waiter.getDays()
-    const waiter_id = await waiter.waiterID(user)
-    const getCheckedDays = await waiter.checkedShifts(waiter_id)
-
-    try {
-        if (days !== '') {
-            req.flash('success', `${user}, you have successfully submitted shift days`)
-
-        } else {
-            req.flash('error', 'Please select your shift days')
-        }
-
-        res.render('waiter', {
-            select,
-            weekdays,
-            getCheckedDays
-        })
-
-    } catch (error) {
-
-    }
-
-});
-
-app.get('/clear', async function (req, res) {
-
-    req.flash('success', 'You have successfully cleared the data')
-    await waiter.reset()
-
-
-    res.render('administrator', {
-
-    })
-
-});
-
-app.get('/days', async function (req, res) {
-
-    const insert = await waiter.getEachWaiter()
-
-    res.render('administrator', {
-        insert
-
-    })
-
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+app.get('/days', employee.getSchedule)
 
 
 const PORT = process.env.PORT || 7676

@@ -9,11 +9,13 @@
     <h6 class="confirm">{{messages.success}}</h6>
 
 
+
     <form action="/waiter/{{username}}" method="POST">
+    <h4>{{username}}</h4>
 
         <br>
         {{#each weekdays}}
-        <input type="checkbox" name="weekdays" class="check" value="{{this.days}}" {{this.state}} >
+        <input type="checkbox" name="weekdays" class="check" value="{{this.days}}" {{this.state}}>
         <span class="check">{{this.days}}</span>
 
         {{/each}}
