@@ -24,7 +24,7 @@ module.exports = function waiterRoutes(waiter) {
         const waiter_id = await waiter.waiterID(user)
         const getCheckedDays = await waiter.checkedShifts(waiter_id)
 
-        
+
 
         weekdays.forEach(day => {
             getCheckedDays.forEach(waiter => {
@@ -42,7 +42,7 @@ module.exports = function waiterRoutes(waiter) {
 
         });
 
-       
+
 
 
     };
@@ -78,10 +78,12 @@ module.exports = function waiterRoutes(waiter) {
 
         req.flash('success', 'You have successfully cleared the data')
         await waiter.reset()
+        const insert = await waiter.getEachWaiter()
+
 
 
         res.render('administrator', {
-
+            insert
         })
 
     };
