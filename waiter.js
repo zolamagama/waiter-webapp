@@ -33,6 +33,7 @@ module.exports = function (pool) {
         return waiters_id.rows[0].id
 
 
+
     }
 
     async function checkedShifts(id) {
@@ -57,9 +58,8 @@ module.exports = function (pool) {
 
     async function selectDays(waiter, days) {
 
-        const name = await pool.query('select id from waiters where waiter_name = $1', [waiter])
+        var name = await pool.query('select id from waiters where waiter_name = $1', [waiter])
         const employee_id = name.rows[0].id
-
         await pool.query('delete from estratweni where waiters_id = $1', [employee_id])
         for (let i = 0; i < days.length; i++) {
 

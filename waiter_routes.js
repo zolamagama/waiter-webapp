@@ -51,7 +51,8 @@ module.exports = function waiterRoutes(waiter) {
         const user = _.capitalize(req.params.username)
         const days = req.body.weekdays
         var select = await waiter.selectDays(user, days)
-        const weekdays = await waiter.getDays()
+        // console.log(select);
+        const weekdays = await waiter.getEachDay()
         const waiter_id = await waiter.waiterID(user)
         const getCheckedDays = await waiter.checkedShifts(waiter_id)
 
