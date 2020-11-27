@@ -159,7 +159,7 @@ describe('The waiter_availability web app', function () {
                     "color": "red",
                     "day": "Tuesday",
                     "id": 1,
-                    "waiters": ["Lulama", "Zola", "Nwabisa", "Yongama"]
+                    "waiters": ["Lulama", "Zola", "Yongama", "Nwabisa"]
                 },
                 {
                     "color": "orange",
