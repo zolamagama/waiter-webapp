@@ -93,7 +93,7 @@ describe('The waiter_availability web app', function () {
                     "color": "orange",
                     "day": "Tuesday",
                     "id": 1,
-                    "waiters": ["Zola", "Lulama"]
+                    "waiters": ["Lulama", "Zola"]
                 },
                 {
                     "color": "orange",
@@ -159,7 +159,7 @@ describe('The waiter_availability web app', function () {
                     "color": "red",
                     "day": "Tuesday",
                     "id": 1,
-                    "waiters": ["Zola", "Yongama", "Nwabisa", "Lulama"]
+                    "waiters": ["Lulama", "Zola", "Nwabisa", "Yongama"]
                 },
                 {
                     "color": "orange",
@@ -245,7 +245,7 @@ describe('The waiter_availability web app', function () {
                     "color": "green",
                     "day": "Friday",
                     "id": 4,
-                    "waiters": ["Nwabisa", "Lulama", "Zola"]
+                    "waiters": ["Zola", "Lulama", "Nwabisa",]
                 },
                 {
                     "color": "orange",
@@ -289,7 +289,7 @@ describe('The waiter_availability web app', function () {
                     "color": "orange",
                     "day": "Monday",
                     "id": 0,
-                    "waiters": ["Zola", "Lulama"]
+                    "waiters": ["Lulama", "Zola"]
                 },
                 {
                     "color": "orange",
