@@ -11,7 +11,7 @@ const Pool = pg.Pool;
 
 
 
-const connectionString = process.env.DATABASE_URL || 'postgresql://codex:pg123@localhost:5432/waiter-availability';
+const connectionString = process.env.DATABASE_URL || 'postgresql://codex:pg123@localhost:5432/waiter_availability_test';
 
 const pool = new Pool({
     connectionString
@@ -27,31 +27,6 @@ describe('The waiter_availability web app', function () {
     });
 
 
-    // it('should be able to insert waiters names in the db', async function () {
-
-    //     let waiters = waiter_availability(pool);
-
-    //     await waiters.addWaiter('Nwabisa');
-
-
-    //     assert.deepEqual([
-    //         {
-    //             waiter_name: "Nwabisa"
-    //         },
-    //         // {
-    //         //     waiter_name: "Lulama"
-    //         //   },
-    //         //   {
-    //         //     waiter_name: "Yongama"
-    //         //   },
-    //           {
-    //             waiter_name: "Zola"
-    //           }
-
-    //     ],
-    //         await waiters.getWaiter())
-
-    // });
 
     it('should add more than one waiters name in the db', async function () {
         let waiters = waiter_availability(pool);
