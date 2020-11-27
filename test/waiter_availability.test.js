@@ -20,9 +20,10 @@ const pool = new Pool({
 describe('The waiter_availability web app', function () {
 
     beforeEach(async function () {
-        await pool.query("delete from estratweni;");
-        // await pool.query("delete from waiters;");
-        // await pool.query("delete from weekdays;");
+        await pool.query("drop table estratweni");
+        await pool.query("drop table waiters");
+        await pool.query("create table waiters (id serial not null primary key, waiter_name text not null)");
+        await pool.query("create table estratweni (id serial not null primary key, waiters_id int not null, foreign key (waiters_id) references waiters(id), weekdays_id int not null,foreign key (weekdays_id) references weekdays(id))");
 
     });
 
@@ -92,7 +93,7 @@ describe('The waiter_availability web app', function () {
                     "color": "orange",
                     "day": "Tuesday",
                     "id": 1,
-                    "waiters": ["Lulama", "Zola"]
+                    "waiters": ["Zola", "Lulama"]
                 },
                 {
                     "color": "orange",
@@ -158,7 +159,7 @@ describe('The waiter_availability web app', function () {
                     "color": "red",
                     "day": "Tuesday",
                     "id": 1,
-                    "waiters": ["Lulama", "Nwabisa", "Yongama", "Zola",]
+                    "waiters": ["Zola", "Yongama", "Nwabisa", "Lulama"]
                 },
                 {
                     "color": "orange",
@@ -198,224 +199,222 @@ describe('The waiter_availability web app', function () {
 
     })
 
-        it('should be able to show a green color for when enough waiters', async function () {
-            let waiters = waiter_availability(pool);
+    it('should be able to show a green color for when enough waiters', async function () {
+        let waiters = waiter_availability(pool);
 
-            await waiters.addWaiter('Zola'),
-                await waiters.addWaiter('Lulama'),
-                await waiters.addWaiter('Nwabisa'),
-                await waiters.addWaiter('Yongama')
-
-            //   await waiters.getDays("Tuesday")
-            await waiters.selectDays('Zola', ["Friday"])
-            await waiters.selectDays('Lulama', ["Friday"])
-            await waiters.selectDays('Nwabisa', ["Friday"])
-            await waiters.selectDays('Yongama', ["Monday"])
-
-
-
-            assert.deepEqual(
-                [
-                    {
-                        "color": "orange",
-                        "day": "Monday",
-                        "id": 0,
-                        "waiters": ["Yongama"]
-                    },
-                    {
-                        "color": "orange",
-                        "day": "Tuesday",
-                        "id": 1,
-                        "waiters": []
-                    },
-                    {
-                        "color": "orange",
-                        "day": "Wednesday",
-                        "id": 2,
-                        "waiters": []
-                    },
-                    {
-                        "color": "orange",
-                        "day": "Thursday",
-                        "id": 3,
-                        "waiters": []
-                    },
-                    {
-                        "color": "green",
-                        "day": "Friday",
-                        "id": 4,
-                        "waiters": ["Lulama",
-                            "Nwabisa",
-                            "Zola"]
-                    },
-                    {
-                        "color": "orange",
-                        "day": "Saturday",
-                        "id": 5,
-                        "waiters": [],
-                    },
-                    {
-                        "color": "orange",
-                        "day": "Sunday",
-                        "id": 6,
-                        "waiters": []
-                    }
-
-                ],
-
-                await waiters.getEachWaiter())
-
-
-        })
-
-        it('should be able to show a orange color for when waiters are still needed', async function () {
-            let waiters = waiter_availability(pool);
-
-            await waiters.addWaiter('Zola'),
-                await waiters.addWaiter('Lulama'),
-                await waiters.addWaiter('Nwabisa'),
-                await waiters.addWaiter('Yongama')
-
-            await waiters.selectDays('Zola', ["Monday"])
-            await waiters.selectDays('Lulama', ["Monday"])
-            await waiters.selectDays('Nwabisa', ["Sunday"])
-            await waiters.selectDays('Yongama', ["Saturday"])
-
-
-
-
-            assert.deepEqual(
-                [
-                    {
-                        "color": "orange",
-                        "day": "Monday",
-                        "id": 0,
-                        "waiters": ["Lulama", "Zola"]
-                    },
-                    {
-                        "color": "orange",
-                        "day": "Tuesday",
-                        "id": 1,
-                        "waiters": []
-                    },
-                    {
-                        "color": "orange",
-                        "day": "Wednesday",
-                        "id": 2,
-                        "waiters": []
-                    },
-                    {
-                        "color": "orange",
-                        "day": "Thursday",
-                        "id": 3,
-                        "waiters": []
-                    },
-                    {
-                        "color": "orange",
-                        "day": "Friday",
-                        "id": 4,
-                        "waiters": []
-                    },
-                    {
-                        "color": "orange",
-                        "day": "Saturday",
-                        "id": 5,
-                        "waiters": ["Yongama"],
-                    },
-                    {
-                        "color": "orange",
-                        "day": "Sunday",
-                        "id": 6,
-                        "waiters": ["Nwabisa"]
-                    }
-
-                ],
-
-                await waiters.getEachWaiter())
-
-
-        })
-
-
-
-
-        it('should be able to get the id of the day', async function () {
-            let waiters = waiter_availability(pool);
-
-            await waiters.checkedShifts()
-
-            await waiters.getEachDay("Friday")
-            const shift_id = await waiters.shiftsID("Friday")
-
-
-            assert.deepEqual(5, shift_id)
-
-        });
-
-        it('should be able to reset the data from admin', async function(){
-            let waiters = waiter_availability(pool);
-
-            await waiters.addWaiter('Zola'),
+        await waiters.addWaiter('Zola'),
             await waiters.addWaiter('Lulama'),
             await waiters.addWaiter('Nwabisa'),
             await waiters.addWaiter('Yongama')
 
-            await waiters.selectDays('Zola', ["Monday"])
-            await waiters.selectDays('Lulama', ["Monday"])
-            await waiters.selectDays('Nwabisa', ["Sunday"])
-            await waiters.selectDays('Yongama', ["Saturday"])
+        //   await waiters.getDays("Tuesday")
+        await waiters.selectDays('Zola', ["Friday"])
+        await waiters.selectDays('Lulama', ["Friday"])
+        await waiters.selectDays('Nwabisa', ["Friday"])
+        await waiters.selectDays('Yongama', ["Monday"])
 
-            await waiters.reset()
 
-            assert.deepEqual([
-                  {
-                    "color": "",
+
+        assert.deepEqual(
+            [
+                {
+                    "color": "orange",
                     "day": "Monday",
                     "id": 0,
-                    "waiters": []
-                  },
-                  {
-                    "color": "",
+                    "waiters": ["Yongama"]
+                },
+                {
+                    "color": "orange",
                     "day": "Tuesday",
                     "id": 1,
                     "waiters": []
-                  },
-                  {
-                    "color": "",
+                },
+                {
+                    "color": "orange",
                     "day": "Wednesday",
                     "id": 2,
                     "waiters": []
-                  },
-                  {
-                    "color": "",
+                },
+                {
+                    "color": "orange",
                     "day": "Thursday",
                     "id": 3,
                     "waiters": []
-                  },
-                  {
-                    "color": "",
+                },
+                {
+                    "color": "green",
                     "day": "Friday",
                     "id": 4,
-                    "waiters": []
-                  },
-                  {
-                    "color": "",
+                    "waiters": ["Nwabisa", "Lulama", "Zola"]
+                },
+                {
+                    "color": "orange",
                     "day": "Saturday",
                     "id": 5,
-                    "waiters": []
-                  },
-                  {
-                    "color": "",
+                    "waiters": [],
+                },
+                {
+                    "color": "orange",
                     "day": "Sunday",
                     "id": 6,
                     "waiters": []
-                  },
-                ]
-          , await waiters.getEachWaiter())
+                }
+
+            ],
+
+            await waiters.getEachWaiter())
+
+
+    })
+
+    it('should be able to show a orange color for when waiters are still needed', async function () {
+        let waiters = waiter_availability(pool);
+
+        await waiters.addWaiter('Zola'),
+            await waiters.addWaiter('Lulama'),
+            await waiters.addWaiter('Nwabisa'),
+            await waiters.addWaiter('Yongama')
+
+        await waiters.selectDays('Zola', ["Monday"])
+        await waiters.selectDays('Lulama', ["Monday"])
+        await waiters.selectDays('Nwabisa', ["Sunday"])
+        await waiters.selectDays('Yongama', ["Saturday"])
 
 
 
-        });
+
+        assert.deepEqual(
+            [
+                {
+                    "color": "orange",
+                    "day": "Monday",
+                    "id": 0,
+                    "waiters": ["Zola", "Lulama"]
+                },
+                {
+                    "color": "orange",
+                    "day": "Tuesday",
+                    "id": 1,
+                    "waiters": []
+                },
+                {
+                    "color": "orange",
+                    "day": "Wednesday",
+                    "id": 2,
+                    "waiters": []
+                },
+                {
+                    "color": "orange",
+                    "day": "Thursday",
+                    "id": 3,
+                    "waiters": []
+                },
+                {
+                    "color": "orange",
+                    "day": "Friday",
+                    "id": 4,
+                    "waiters": []
+                },
+                {
+                    "color": "orange",
+                    "day": "Saturday",
+                    "id": 5,
+                    "waiters": ["Yongama"],
+                },
+                {
+                    "color": "orange",
+                    "day": "Sunday",
+                    "id": 6,
+                    "waiters": ["Nwabisa"]
+                }
+
+            ],
+
+            await waiters.getEachWaiter())
+
+
+    })
+
+
+
+
+    it('should be able to get the id of the day', async function () {
+        let waiters = waiter_availability(pool);
+
+        await waiters.checkedShifts()
+
+        await waiters.getEachDay("Friday")
+        const shift_id = await waiters.shiftsID("Friday")
+
+
+        assert.deepEqual(5, shift_id)
+
+    });
+
+    it('should be able to reset the data from admin', async function () {
+        let waiters = waiter_availability(pool);
+
+        await waiters.addWaiter('Zola'),
+            await waiters.addWaiter('Lulama'),
+            await waiters.addWaiter('Nwabisa'),
+            await waiters.addWaiter('Yongama')
+
+        await waiters.selectDays('Zola', ["Monday"])
+        await waiters.selectDays('Lulama', ["Monday"])
+        await waiters.selectDays('Nwabisa', ["Sunday"])
+        await waiters.selectDays('Yongama', ["Saturday"])
+
+        await waiters.reset()
+
+        assert.deepEqual([
+            {
+                "color": "",
+                "day": "Monday",
+                "id": 0,
+                "waiters": []
+            },
+            {
+                "color": "",
+                "day": "Tuesday",
+                "id": 1,
+                "waiters": []
+            },
+            {
+                "color": "",
+                "day": "Wednesday",
+                "id": 2,
+                "waiters": []
+            },
+            {
+                "color": "",
+                "day": "Thursday",
+                "id": 3,
+                "waiters": []
+            },
+            {
+                "color": "",
+                "day": "Friday",
+                "id": 4,
+                "waiters": []
+            },
+            {
+                "color": "",
+                "day": "Saturday",
+                "id": 5,
+                "waiters": []
+            },
+            {
+                "color": "",
+                "day": "Sunday",
+                "id": 6,
+                "waiters": []
+            },
+        ]
+            , await waiters.getEachWaiter())
+
+
+
+    });
 
 
 
