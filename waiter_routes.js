@@ -49,9 +49,10 @@ module.exports = function waiterRoutes(waiter) {
 
     async function selectShifts(req, res) {
         const user = _.capitalize(req.params.username)
-        const days = req.body.weekdays
+        const days = Array.isArray(req.body.weekdays) ? req.body.weekdays: [req.body.weekdays]
+        console.log(typeof days);
         var select = await waiter.selectDays(user, days)
-        // console.log(select);
+      
         const weekdays = await waiter.getEachDay()
         const waiter_id = await waiter.waiterID(user)
         const getCheckedDays = await waiter.checkedShifts(waiter_id)

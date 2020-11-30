@@ -5,6 +5,7 @@ const waiter_availability = require('../waiter');
 const pg = require("pg");
 // const { it } = require('mocha');
 const waiter = require('../waiter');
+const { isArray } = require('lodash');
 // const { it } = require('mocha');
 
 const Pool = pg.Pool;
@@ -415,6 +416,7 @@ describe('The waiter_availability web app', function () {
 
 
     });
+
 
 
 

@@ -20,11 +20,8 @@ module.exports = function (pool) {
         if (days) {
             const day_id = await pool.query('select id from weekdays where days = $1', [days])
             return day_id.rows[0].id
-
-        } else {
-            return false
-        }
-
+            
+        } 
 
     }
 
